@@ -18,6 +18,32 @@ class Rooms
     @user_action = $stdin.gets.chomp
   end
 
+  # When the user introduces a wrong direction.
+  def cant_go_there
+    clear_screen
+
+    show_room_information
+
+    puts "#{@@tab}You can't go there.\n\n"
+
+    actions
+
+    check_user_action
+  end
+
+  # When the door is locked.
+  def door_is_locked
+    clear_screen
+
+    show_room_information
+
+    puts "#{@@tab}The door seems to be locked.\n\n"
+
+    actions
+
+    check_user_action
+  end
+
   # When the user introduces a wrong action.
   def not_an_action
     clear_screen
@@ -31,18 +57,17 @@ class Rooms
     check_user_action
   end
 
-  # Checks the input from the user and does the appropriate action.
+  # Checks the input from the user and the direction the user
+  # is facing and does the appropriate action.
   def check_user_action
-
     map = Map.new
     current_room_index = map.cave_map.index(@current_room)
 
     # EAST
     if @@user_direction == "east"
-
       case @user_action.downcase
+      # EAST - FORWARD  
       when "go forward"
-
         next_room_index = current_room_index + 1
 
         if !@forward_locked
@@ -51,18 +76,10 @@ class Rooms
           next_room = map.cave_map[next_room_index]
           map.rooms_list[next_room].enter
         else
-          clear_screen
-
-          show_room_information
-
-          puts "#{@@tab}You can't go there.\n\n"
-
-          actions
-          check_user_action
+          cant_go_there
         end  
-
+      # EAST - LEFT
       when "go left"
-
         left_room_index = current_room_index - 5
 
         if !@left_locked
@@ -71,18 +88,10 @@ class Rooms
           left_room = map.cave_map[left_room_index]
           map.rooms_list[left_room].enter
         else
-          clear_screen
-
-          show_room_information
-
-          puts "#{@@tab}You can't go there.\n\n"
-
-          actions
-          check_user_action
+          cant_go_there
         end
-
+      # EAST - RIGHT
       when "go right"
-
         right_room_index = current_room_index + 5
 
         if !@right_locked
@@ -91,18 +100,10 @@ class Rooms
           right_room = map.cave_map[right_room_index]
           map.rooms_list[right_room].enter        
         else
-          clear_screen
-
-          show_room_information
-
-          puts "#{@@tab}You can't go there.\n\n"
-
-          actions
-          check_user_action
+          cant_go_there
         end
-
+      # EAST - BACK
       when "go back"
-
         previous_room_index = current_room_index - 1
 
         if !@back_locked
@@ -111,28 +112,17 @@ class Rooms
           previous_room = map.cave_map[previous_room_index]
           map.rooms_list[previous_room].enter
         else
-          clear_screen
-
-          show_room_information
-
-          puts "#{@@tab}You can't go there.\n\n"
-
-          actions
-          check_user_action
+          cant_go_there
         end
-
       else
-
         not_an_action  
-
       end
 
     # SOUTH
-    elsif @@user_direction == "south"
-      
+    elsif @@user_direction == "south"    
       case @user_action.downcase
+      # SOUTH - FORWARD
       when "go forward"
-
         next_room_index = current_room_index + 5
 
         if !@forward_locked
@@ -141,18 +131,10 @@ class Rooms
           next_room = map.cave_map[next_room_index]
           map.rooms_list[next_room].enter
         else
-          clear_screen
-
-          show_room_information
-
-          puts "#{@@tab}You can't go there.\n\n"
-
-          actions
-          check_user_action
+          cant_go_there
         end  
-
+      # SOUTH - LEFT
       when "go left"
-
         left_room_index = current_room_index + 1
 
         if !@left_locked && @current_room != "room 7"
@@ -161,27 +143,12 @@ class Rooms
           left_room = map.cave_map[left_room_index]
           map.rooms_list[left_room].enter
         elsif @current_room == "room 7"
-          clear_screen
-
-          show_room_information
-
-          puts "#{@@tab}The door seems to be locked.\n\n"
-
-          actions
-          check_user_action
+          door_is_locked
         else
-          clear_screen
-
-          show_room_information
-
-          puts "#{@@tab}You can't go there.\n\n"
-
-          actions
-          check_user_action
+          cant_go_there
         end
-
+      # SOUTH - RIGHT
       when "go right"  
-
         right_room_index = current_room_index - 1
 
         if !@right_locked
@@ -190,18 +157,10 @@ class Rooms
           right_room = map.cave_map[right_room_index]
           map.rooms_list[right_room].enter
         else
-          clear_screen
-
-          show_room_information
-
-          puts "#{@@tab}You can't go there.\n\n"
-
-          actions
-          check_user_action
+          cant_go_there
         end
-
+      # SOUTH - BACK
       when "go back"
-
         previous_room_index = current_room_index - 5
 
         if !@back_locked
@@ -210,28 +169,17 @@ class Rooms
           previous_room = map.cave_map[previous_room_index]
           map.rooms_list[previous_room].enter
         else
-          clear_screen
-
-          show_room_information
-
-          puts "#{@@tab}You can't go there.\n\n"
-
-          actions
-          check_user_action
+          cant_go_there
         end
-
       else
-
         not_an_action
-
       end
 
     # NORTH
     elsif @@user_direction == "north"
-
       case @user_action.downcase
+      # NORTH - FORWARD
       when "go forward"
-
         next_room_index = current_room_index - 5
 
         if !@forward_locked
@@ -240,18 +188,10 @@ class Rooms
           next_room = map.cave_map[next_room_index]
           map.rooms_list[next_room].enter
         else
-          clear_screen
-
-          show_room_information
-
-          puts "#{@@tab}You can't go there.\n\n"
-
-          actions
-          check_user_action
+          cant_go_there
         end  
-
+      # NORTH - LEFT
       when "go left"
-
         left_room_index = current_room_index - 1
 
         if !@left_locked
@@ -260,18 +200,10 @@ class Rooms
           left_room = map.cave_map[left_room_index]
           map.rooms_list[left_room].enter
         else
-          clear_screen
-
-          show_room_information
-
-          puts "#{@@tab}You can't go there.\n\n"
-
-          actions
-          check_user_action
+          cant_go_there
         end
-
+      # NORTH - RIGHT
       when "go right"  
-
         right_room_index = current_room_index + 1
 
         if !@right_locked && @current_room != "room 7"
@@ -280,27 +212,12 @@ class Rooms
           right_room = map.cave_map[right_room_index]
           map.rooms_list[right_room].enter
         elsif @current_room == "room 7"
-          clear_screen
-
-          show_room_information
-
-          puts "#{@@tab}The door seems to be locked.\n\n"
-
-          actions
-          check_user_action
+          door_is_locked
         else
-          clear_screen
-
-          show_room_information
-
-          puts "#{@@tab}You can't go there.\n\n"
-
-          actions
-          check_user_action
+          cant_go_there
         end
-
+      # NORTH - BACK
       when "go back"
-
         previous_room_index = current_room_index + 5
 
         if !@back_locked
@@ -309,28 +226,17 @@ class Rooms
           previous_room = map.cave_map[previous_room_index]
           map.rooms_list[previous_room].enter
         else
-          clear_screen
-
-          show_room_information
-
-          puts "#{@@tab}You can't go there.\n\n"
-
-          actions
-          check_user_action
+          cant_go_there
         end
-
       else
-
         not_an_action
-
       end
 
     # WEST
     elsif @@user_direction == "west"
-
       case @user_action.downcase
+      # WEST - FORWARD
       when "go forward"
-
         next_room_index = current_room_index - 1
 
         if !@forward_locked
@@ -339,18 +245,10 @@ class Rooms
           next_room = map.cave_map[next_room_index]
           map.rooms_list[next_room].enter
         else
-          clear_screen
-
-          show_room_information
-
-          puts "#{@@tab}You can't go there.\n\n"
-
-          actions
-          check_user_action
+          cant_go_there
         end  
-
+      # WEST - LEFT
       when "go left"
-
         left_room_index = current_room_index + 5
 
         if !@left_locked
@@ -359,18 +257,10 @@ class Rooms
           left_room = map.cave_map[left_room_index]
           map.rooms_list[left_room].enter
         else
-          clear_screen
-
-          show_room_information
-
-          puts "#{@@tab}You can't go there.\n\n"
-
-          actions
-          check_user_action
+          cant_go_there
         end
-
+      # WEST - RIGHT
       when "go right"
-
         right_room_index = current_room_index - 5
 
         if !@right_locked
@@ -379,18 +269,10 @@ class Rooms
           right_room = map.cave_map[right_room_index]
           map.rooms_list[right_room].enter        
         else
-          clear_screen
-
-          show_room_information
-
-          puts "#{@@tab}You can't go there.\n\n"
-
-          actions
-          check_user_action
+          cant_go_there
         end
-
+      # WEST - BACK
       when "go back"
-
         previous_room_index = current_room_index + 1
 
         if !@back_locked
@@ -399,26 +281,13 @@ class Rooms
           previous_room = map.cave_map[previous_room_index]
           map.rooms_list[previous_room].enter
         else
-          clear_screen
-
-          show_room_information
-
-          puts "#{@@tab}You can't go there.\n\n"
-
-          actions
-          check_user_action
+          cant_go_there
         end
-
       else
-
         not_an_action
-
       end
-
     else
-
       puts "Something went wrong."
-
     end
   end
 
@@ -435,7 +304,7 @@ end
 
 class Entrance < Rooms
 
-	def enter
+  def enter
 		clear_screen
 
     @current_room = "entrance"
@@ -447,19 +316,19 @@ class Entrance < Rooms
     actions
 
     check_user_action
-	end
+  end
 
   def locked_directions
     case @@user_direction
     when "east"
-      @left_locked = true
-      @right_locked = true
-      @back_locked = true
+      @left_locked    = true
+      @right_locked   = true
+      @back_locked    = true
       @forward_locked = false
     when "west"
-      @left_locked = true
-      @right_locked = true
-      @back_locked = false
+      @left_locked    = true
+      @right_locked   = true
+      @back_locked    = false
       @forward_locked = true
     end
   end
@@ -477,7 +346,7 @@ class Entrance < Rooms
       #        #     #              #     #        #
       #        #     #              #     #        #
       #        |     #              |     |        #
-      ##########     #              #     ##########
+      ##########     #              |     ##########
       #        #     #              #     #        #
       #        |     #              #     |        #
       #        #     #              #     #        #
@@ -498,7 +367,7 @@ end
 
 class Room1 < Rooms
 
-	def enter
+  def enter
     clear_screen
 
     @current_room = "room 1"
@@ -510,25 +379,25 @@ class Room1 < Rooms
     actions   
 
     check_user_action
-	end
+  end
 
   def locked_directions
     case @@user_direction
     when "east"
-      @left_locked = true
-      @right_locked = false
-      @back_locked = false
+      @left_locked    = true
+      @right_locked   = false
+      @back_locked    = false
       @forward_locked = false
     when "west"
-      @left_locked = false
-      @right_locked = true
+      @left_locked    = false
+      @right_locked   = true
       @forward_locked = false
-      @back_locked = false
+      @back_locked    = false
     when "north"
-      @left_locked = false
-      @right_locked = false
+      @left_locked    = false
+      @right_locked   = false
       @forward_locked = true
-      @back_locked = false
+      @back_locked    = false
     end
   end
 
@@ -545,7 +414,7 @@ class Room1 < Rooms
       #        #     #              #     #        #
       #        #     #              #     #        #
       #        |     #              |     |        #
-      ##########     #              #     ##########
+      ##########     #              |     ##########
       #        #     #              #     #        #
       #        |     #              #     |        #
       #        #     #              #     #        #
@@ -559,7 +428,8 @@ class Room1 < Rooms
       puts "#{@@tab}The entrance to your front.\n\n"
     else
       puts "#{@@tab}You are in the main corridor."
-      puts "#{@@tab}The entrance to your left. The glass wall to your right.\n\n"
+      puts "#{@@tab}The entrance to your left."
+      puts "#{@@tab}The glass wall to your right.\n\n"
     end
 
     puts "#{@@tab}Direction: #{@@user_direction}\n\n" if @@show_direction
@@ -585,14 +455,14 @@ class Room2 < Rooms
   def locked_directions
     case @@user_direction
     when "east"
-      @left_locked = true
-      @right_locked = true
-      @back_locked = false
+      @left_locked    = true
+      @right_locked   = true
+      @back_locked    = false
       @forward_locked = false
     when "west"
-      @left_locked = true
-      @right_locked = true
-      @back_locked = false
+      @left_locked    = true
+      @right_locked   = true
+      @back_locked    = false
       @forward_locked = false
     end
   end
@@ -610,7 +480,7 @@ class Room2 < Rooms
       #        #     #              #     #        #
       #        #     #              #     #        #
       #        |     #              |     |        #
-      ##########     #              #     ##########
+      ##########     #              |     ##########
       #        #     #              #     #        #
       #        |     #              #     |        #
       #        #     #              #     #        #
@@ -646,20 +516,20 @@ class Room3 < Rooms
   def locked_directions
     case @@user_direction
     when "east"
-      @left_locked = true
-      @right_locked = false
-      @back_locked = false
+      @left_locked    = true
+      @right_locked   = false
+      @back_locked    = false
       @forward_locked = false
     when "west"
-      @left_locked = false
-      @right_locked = true
+      @left_locked    = false
+      @right_locked   = true
       @forward_locked = false
-      @back_locked = false
+      @back_locked    = false
     when "north"
-      @left_locked = false
-      @right_locked = false
+      @left_locked    = false
+      @right_locked   = false
       @forward_locked = true
-      @back_locked = false
+      @back_locked    = false
     end
   end
 
@@ -676,7 +546,7 @@ class Room3 < Rooms
       #        #     #              #     #        #
       #        #     #              #     #        #
       #        |     #              |     |        #
-      ##########     #              #     ##########
+      ##########     #              |     ##########
       #        #     #              #     #        #
       #        |     #              #     |        #
       #        #     #              #     #        #
@@ -684,11 +554,11 @@ class Room3 < Rooms
     \n\n"
 
     if @@user_direction == "east"
-      puts "#{@@tab}You can see a corridor to your right,"
-      puts "#{@@tab}the glass wall to your front.\n\n"
+      puts "#{@@tab}You can see a corridor to your right."
+      puts "#{@@tab}The glass wall to your front.\n\n"
     elsif @@user_direction == "west"
-      puts "#{@@tab}You can see a corridor to your left,"
-      puts "#{@@tab}the entrance to your front.\n\n"
+      puts "#{@@tab}You can see a corridor to your left."
+      puts "#{@@tab}The entrance to your front.\n\n"
     elsif @@user_direction == "north"
       puts "#{@@tab}You are in the main corridor."
       puts "#{@@tab}The entrance to your left."
@@ -721,9 +591,9 @@ class Room4 < Rooms
   def locked_directions
     case @@user_direction
     when "east"
-      @left_locked = true
-      @right_locked = true
-      @back_locked = false
+      @left_locked    = true
+      @right_locked   = true
+      @back_locked    = false
       @forward_locked = true
     end
   end
@@ -741,7 +611,7 @@ class Room4 < Rooms
       #        #     #              #     #        #
       #        #     #              #     #        #
       #        |     #              |     |        #
-      ##########     #              #     ##########
+      ##########     #              |     ##########
       #        #     #              #     #        #
       #        |     #              #     |        #
       #        #     #              #     #        #
@@ -775,9 +645,9 @@ class Locked < Rooms
   def locked_directions
     case @@user_direction
     when "west"
-      @left_locked = true
-      @right_locked = true
-      @back_locked = false
+      @left_locked    = true
+      @right_locked   = true
+      @back_locked    = false
       @forward_locked = true
     end
   end
@@ -795,14 +665,15 @@ class Locked < Rooms
       #        #     #              #     #        #
       #        #     #              #     #        #
       #     #{arrows} /      #              |     |        #
-      ##########     #              #     ##########
+      ##########     #              |     ##########
       #        #     #              #     #        #
       #        |     #              #     |        #
       #        #     #              #     #        #
       ##############################################
     \n\n"
 
-    puts "#{@@tab}Not much to see in this room.\n\n"
+    puts "#{@@tab}An empty room."
+    puts "#{@@tab}Not much to see here.\n\n"
 
     puts "#{@@tab}Direction: #{@@user_direction}\n\n" if @@show_direction
   end
@@ -827,19 +698,19 @@ class Room5 < Rooms
   def locked_directions
     case @@user_direction
     when "east"
-      @left_locked = false
-      @right_locked = false
-      @back_locked = false
+      @left_locked    = false
+      @right_locked   = false
+      @back_locked    = false
       @forward_locked = true
     when "south"
-      @left_locked = true
-      @right_locked = false
-      @back_locked = false
+      @left_locked    = true
+      @right_locked   = false
+      @back_locked    = false
       @forward_locked = false
     when "north"
-      @left_locked = false
-      @right_locked = true
-      @back_locked = false
+      @left_locked    = false
+      @right_locked   = true
+      @back_locked    = false
       @forward_locked = false
     end
   end
@@ -857,7 +728,7 @@ class Room5 < Rooms
       #        #     #              #     #        #
       #        #     #              #     #        #
       #        |  #{arrows}  #              |     |        #
-      ##########     #              #     ##########
+      ##########     #              |     ##########
       #        #     #              #     #        #
       #        |     #              #     |        #
       #        #     #              #     #        #
@@ -872,8 +743,7 @@ class Room5 < Rooms
       puts "#{@@tab}To your front you can get to the main corridor.\n\n"
     else
       puts "#{@@tab}To your left you can get to the main corridor."
-      puts "#{@@tab}To your right the corridor continues a little,"
-      puts "#{@@tab}and there's another door.\n\n"
+      puts "#{@@tab}To your right the corridor continues a little.\n\n"
     end
 
     puts "#{@@tab}Direction: #{@@user_direction}\n\n" if @@show_direction
@@ -899,9 +769,9 @@ class Room6 < Rooms
   def locked_directions
     case @@user_direction
     when "west"
-      @left_locked = true
-      @right_locked = true
-      @back_locked = false
+      @left_locked    = true
+      @right_locked   = true
+      @back_locked    = false
       @forward_locked = true
     end
   end
@@ -919,14 +789,15 @@ class Room6 < Rooms
       #        #     #              #     #        #
       #        #     #              #     #        #
       #        |     #           #{arrows} /      |        #
-      ##########     #              #     ##########
+      ##########     #              |     ##########
       #        #     #              #     #        #
       #        |     #              #     |        #
       #        #     #              #     #        #
       ##############################################
     \n\n"
 
-    puts "#{@@tab}Not much to see in this room.\n\n"
+    puts "#{@@tab}A big and empty room."
+    puts "#{@@tab}Not much to see here.\n\n"
 
     puts "#{@@tab}Direction: #{@@user_direction}\n\n" if @@show_direction
   end
@@ -951,19 +822,19 @@ class Room7 < Rooms
   def locked_directions
     case @@user_direction
     when "east"
-      @left_locked = false
-      @right_locked = false
-      @back_locked = false
+      @left_locked    = false
+      @right_locked   = false
+      @back_locked    = false
       @forward_locked = true
     when "south"
-      @left_locked = true
-      @right_locked = false
-      @back_locked = false
+      @left_locked    = true
+      @right_locked   = false
+      @back_locked    = false
       @forward_locked = false
     when "north"
-      @left_locked = false
-      @right_locked = true
-      @back_locked = false
+      @left_locked    = false
+      @right_locked   = true
+      @back_locked    = false
       @forward_locked = false
     end
   end
@@ -981,7 +852,7 @@ class Room7 < Rooms
       #        #     #              #     #        #
       #        #     #              #     #        #
       #        |     #              |  #{arrows}  |        #
-      ##########     #              #     ##########
+      ##########     #              |     ##########
       #        #     #              #     #        #
       #        |     #              #     |        #
       #        #     #              #     #        #
@@ -996,8 +867,7 @@ class Room7 < Rooms
       puts "#{@@tab}To your front you can get to the main corridor.\n\n"
     else
       puts "#{@@tab}To your left you can get to the main corridor."
-      puts "#{@@tab}To your right the corridor continues a little,"
-      puts "#{@@tab}and there's another door.\n\n"
+      puts "#{@@tab}To your right the corridor continues a little.\n\n"
     end
 
     puts "#{@@tab}Direction: #{@@user_direction}\n\n" if @@show_direction
@@ -1023,9 +893,9 @@ class Room8 < Rooms
   def locked_directions
     case @@user_direction
     when "west"
-      @left_locked = true
-      @right_locked = true
-      @back_locked = false
+      @left_locked    = true
+      @right_locked   = true
+      @back_locked    = false
       @forward_locked = true
     end
   end
@@ -1043,14 +913,15 @@ class Room8 < Rooms
       #        #     #              #     #        #
       #        #     #              #     #        #
       #        |     #              |     |        #
-      ##########     #              #     ##########
+      ##########     #              |     ##########
       #        #     #              #     #        #
       #     #{arrows} /      #              #     |        #
       #        #     #              #     #        #
       ##############################################
     \n\n"
 
-    puts "#{@@tab}Not much to see in this room.\n\n"
+    puts "#{@@tab}An empty room."
+    puts "#{@@tab}Not much to see here.\n\n"
 
     puts "#{@@tab}Direction: #{@@user_direction}\n\n" if @@show_direction
   end
@@ -1075,14 +946,14 @@ class Room9 < Rooms
   def locked_directions
     case @@user_direction
     when "east"
-      @left_locked = false
-      @right_locked = true
-      @back_locked = false
+      @left_locked    = false
+      @right_locked   = true
+      @back_locked    = false
       @forward_locked = true
     when "south"
-      @left_locked = true
-      @right_locked = false
-      @back_locked = false
+      @left_locked    = true
+      @right_locked   = false
+      @back_locked    = false
       @forward_locked = true
     end
   end
@@ -1100,7 +971,7 @@ class Room9 < Rooms
       #        #     #              #     #        #
       #        #     #              #     #        #
       #        |     #              |     |        #
-      ##########     #              #     ##########
+      ##########     #              |     ##########
       #        #     #              #     #        #
       #        |  #{arrows}  #              #     |        #
       #        #     #              #     #        #
@@ -1137,14 +1008,14 @@ class Room10 < Rooms
   def locked_directions
     case @@user_direction
     when "west"
-      @left_locked = true
-      @right_locked = false
-      @back_locked = false
+      @left_locked    = true
+      @right_locked   = false
+      @back_locked    = false
       @forward_locked = true
     when "south"
-      @left_locked = false
-      @right_locked = true
-      @back_locked = false
+      @left_locked    = false
+      @right_locked   = true
+      @back_locked    = false
       @forward_locked = true
     end
   end
@@ -1162,7 +1033,7 @@ class Room10 < Rooms
       #        #     #              #     #        #
       #        #     #              #     #        #
       #        |     #              |     |        #
-      ##########     #              #     ##########
+      ##########     #              |     ##########
       #        #     #              #     #        #
       #        |     #              #  #{arrows}  |        #
       #        #     #              #     #        #
@@ -1199,9 +1070,9 @@ class Exit < Rooms
   def locked_directions
     case @@user_direction
     when "east"
-      @left_locked = true
-      @right_locked = true
-      @back_locked = false
+      @left_locked    = true
+      @right_locked   = true
+      @back_locked    = false
       @forward_locked = true
     end
   end
@@ -1219,14 +1090,15 @@ class Exit < Rooms
       #        #     #              #     #        #
       #        #     #              #     #        #
       #        |     #              |     |        #
-      ##########     #              #     ##########
+      ##########     #              |     ##########
       #        #     #              #     #        #
       #        |     #              #      / #{arrows}     #
       #        #     #              #     #        #
       ##############################################
     \n\n"
 
-    puts "#{@@tab}Not much to see in this room.\n\n"
+    puts "#{@@tab}An empty room."
+    puts "#{@@tab}Not much to see here.\n\n"
 
     puts "#{@@tab}Direction: #{@@user_direction}\n\n" if @@show_direction
   end
