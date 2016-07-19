@@ -1,8 +1,8 @@
 class Rooms
 
   @@actions = ["Go forward", "go left", "go right", "go back"]
+  @@show_actions = true
   @@user_direction = "east"
-  @@show_direction = false
   @@tab = "      " # Add spaces to separate the text from the left margin.
 
   # Clears the console in Unix and Windows systems.
@@ -10,9 +10,10 @@ class Rooms
     system "clear" or system "cls"
   end
 
-  # Prints actions and gets user input.
+  # Prints actions if @@show_actions is set to true, and gets user input.
   def actions
-    print "#{@@tab}Actions: #{@@actions.join(", ") + "."}\n\n"
+    print "#{@@tab}Actions: #{@@actions.join(", ") + "."}\n" if @@show_actions
+    puts "\n"
     print "#{@@tab}> "
 
     @user_action = $stdin.gets.chomp
@@ -23,11 +24,8 @@ class Rooms
     clear_screen
 
     show_room_information
-
     puts "#{@@tab}You can't go there.\n\n"
-
     actions
-
     check_user_action
   end
 
@@ -36,11 +34,8 @@ class Rooms
     clear_screen
 
     show_room_information
-
     puts "#{@@tab}The door seems to be locked.\n\n"
-
     actions
-
     check_user_action
   end
 
@@ -49,16 +44,15 @@ class Rooms
     clear_screen
 
     show_room_information
-
     puts "#{@@tab}I don't understand that action.\n\n"
-
     actions
-
     check_user_action
   end
 
-  # Checks the input from the user and the direction the user
-  # is facing and does the appropriate action.
+  # Checks the direction the user is facing and the input
+  # from the user. If the user changes direction, 
+  # and that direction is not locked, it updates the
+  # @@user_direction variable, and enters the appropriate room.
   def check_user_action
     map = Map.new
     current_room_index = map.cave_map.index(@current_room)
@@ -291,7 +285,7 @@ class Rooms
     end
   end
 
-  # Shows the user direction.
+  # Uses unicode to show arrows for the user direction.
   def arrows
     case @@user_direction
     when "east"  then "\u21c9"
@@ -305,16 +299,12 @@ end
 class Entrance < Rooms
 
   def enter
-		clear_screen
-
+	  clear_screen
     @current_room = "entrance"
-
     locked_directions
 
     show_room_information
-
     actions
-
     check_user_action
   end
 
@@ -360,8 +350,6 @@ class Entrance < Rooms
     else
       puts "#{@@tab}You are at the entrance of a small construction.\n\n"
     end
-
-    puts "#{@@tab}Direction: #{@@user_direction}\n\n" if @@show_direction
   end
 end
 
@@ -369,15 +357,11 @@ class Room1 < Rooms
 
   def enter
     clear_screen
-
     @current_room = "room 1"
-
     locked_directions
 
     show_room_information
-
     actions   
-
     check_user_action
   end
 
@@ -431,26 +415,20 @@ class Room1 < Rooms
       puts "#{@@tab}The entrance to your left."
       puts "#{@@tab}The glass wall to your right.\n\n"
     end
-
-    puts "#{@@tab}Direction: #{@@user_direction}\n\n" if @@show_direction
   end
 end
 
 class Room2 < Rooms
 
-	def enter
-    clear_screen
-    
+  def enter
+    clear_screen  
     @current_room = "room 2"
-
     locked_directions
 
-		show_room_information
-
+	  show_room_information
     actions
-
     check_user_action
-	end
+  end
 
   def locked_directions
     case @@user_direction
@@ -492,8 +470,6 @@ class Room2 < Rooms
     else
       puts "#{@@tab}You can see the entrance at the end.\n\n"
     end
-
-    puts "#{@@tab}Direction: #{@@user_direction}\n\n" if @@show_direction
   end
 end
 
@@ -501,17 +477,13 @@ class Room3 < Rooms
 
 	def enter
     clear_screen
-
     @current_room = "room 3"
-
     locked_directions
 
     show_room_information
-
     actions
-
     check_user_action
-	end
+  end
 
   def locked_directions
     case @@user_direction
@@ -567,26 +539,20 @@ class Room3 < Rooms
       puts "#{@@tab}You are in the main corridor."
       puts "#{@@tab}You can see the entrance at the end.\n\n"
     end
-
-    puts "#{@@tab}Direction: #{@@user_direction}\n\n" if @@show_direction
   end
 end
 
 class Room4 < Rooms
 
-	def enter
+  def enter
     clear_screen
-
     @current_room = "room 4"
-
     locked_directions
 
     show_room_information
-
     actions
-
     check_user_action
-	end
+  end
 
   def locked_directions
     case @@user_direction
@@ -621,26 +587,21 @@ class Room4 < Rooms
     puts "#{@@tab}There is a wall-sized window in front of you."
     puts "#{@@tab}You can see a big cherry tree, its leaves and flowers"
     puts "#{@@tab}moving gently in the slight breeze.\n\n"
-
-    puts "#{@@tab}Direction: #{@@user_direction}\n\n" if @@show_direction
   end
 end
 
+# Initially, this room was supposed to be locked.
 class Locked < Rooms
 
-	def enter
+  def enter
     clear_screen
-
     @current_room = "locked"
-
     locked_directions
 
-		show_room_information
-
+	  show_room_information
     actions
-
     check_user_action
-	end
+  end
 
   def locked_directions
     case @@user_direction
@@ -674,8 +635,6 @@ class Locked < Rooms
 
     puts "#{@@tab}An empty room."
     puts "#{@@tab}Not much to see here.\n\n"
-
-    puts "#{@@tab}Direction: #{@@user_direction}\n\n" if @@show_direction
   end
 end
 
@@ -683,15 +642,11 @@ class Room5 < Rooms
 
   def enter
     clear_screen
-
     @current_room = "room 5"
-
     locked_directions
 
     show_room_information
-
     actions
-
     check_user_action
   end
 
@@ -745,8 +700,6 @@ class Room5 < Rooms
       puts "#{@@tab}To your left you can get to the main corridor."
       puts "#{@@tab}To your right the corridor continues a little.\n\n"
     end
-
-    puts "#{@@tab}Direction: #{@@user_direction}\n\n" if @@show_direction
   end
 end
 
@@ -754,15 +707,11 @@ class Room6 < Rooms
 
   def enter
     clear_screen
-
     @current_room = "room 6"
-
     locked_directions
 
     show_room_information
-
     actions
-
     check_user_action
   end
 
@@ -798,8 +747,6 @@ class Room6 < Rooms
 
     puts "#{@@tab}A big and empty room."
     puts "#{@@tab}Not much to see here.\n\n"
-
-    puts "#{@@tab}Direction: #{@@user_direction}\n\n" if @@show_direction
   end
 end
 
@@ -807,15 +754,11 @@ class Room7 < Rooms
 
   def enter
     clear_screen
-
     @current_room = "room 7"
-
     locked_directions
     
     show_room_information
-
     actions
-
     check_user_action
   end
 
@@ -869,8 +812,6 @@ class Room7 < Rooms
       puts "#{@@tab}To your left you can get to the main corridor."
       puts "#{@@tab}To your right the corridor continues a little.\n\n"
     end
-
-    puts "#{@@tab}Direction: #{@@user_direction}\n\n" if @@show_direction
   end
 end
 
@@ -878,15 +819,11 @@ class Room8 < Rooms
 
   def enter
     clear_screen
-
     @current_room = "room 8"
-
     locked_directions
     
     show_room_information
-
     actions
-
     check_user_action
   end
 
@@ -922,8 +859,6 @@ class Room8 < Rooms
 
     puts "#{@@tab}An empty room."
     puts "#{@@tab}Not much to see here.\n\n"
-
-    puts "#{@@tab}Direction: #{@@user_direction}\n\n" if @@show_direction
   end
 end
 
@@ -931,15 +866,11 @@ class Room9 < Rooms
 
   def enter
     clear_screen
-
     @current_room = "room 9"
-
     locked_directions
     
     show_room_information
-
     actions
-
     check_user_action
   end
 
@@ -984,8 +915,6 @@ class Room9 < Rooms
     else
       puts "#{@@tab}To your left you can get to the main corridor.\n\n"
     end
-
-    puts "#{@@tab}Direction: #{@@user_direction}\n\n" if @@show_direction
   end
 end
 
@@ -993,15 +922,11 @@ class Room10 < Rooms
 
   def enter
     clear_screen
-
     @current_room = "room 10"
-
     locked_directions
     
     show_room_information
-
     actions
-
     check_user_action
   end
 
@@ -1046,26 +971,20 @@ class Room10 < Rooms
     else
       puts "#{@@tab}To your right you can get to the main corridor.\n\n"
     end
-
-    puts "#{@@tab}Direction: #{@@user_direction}\n\n" if @@show_direction
   end
 end
 
 class Exit < Rooms
 
-	def enter
+  def enter
     clear_screen
-
     @current_room = "exit"
-
     locked_directions
 
-		show_room_information
-
+	  show_room_information
     actions
-
     check_user_action
-	end
+  end
 
   def locked_directions
     case @@user_direction
@@ -1099,7 +1018,5 @@ class Exit < Rooms
 
     puts "#{@@tab}An empty room."
     puts "#{@@tab}Not much to see here.\n\n"
-
-    puts "#{@@tab}Direction: #{@@user_direction}\n\n" if @@show_direction
   end
 end
