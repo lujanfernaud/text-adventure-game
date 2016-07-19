@@ -2,6 +2,7 @@ class Rooms
 
   @@actions = ["Go forward", "go left", "go right", "go back"]
   @@show_actions = true
+  @@only_available_actions = true
   @@user_direction = "east"
   @@tab = "      " # Add spaces to separate the text from the left margin.
 
@@ -12,11 +13,34 @@ class Rooms
 
   # Prints actions if @@show_actions is set to true, and gets user input.
   def actions
-    print "#{@@tab}Actions: #{@@actions.join(", ") + "."}\n" if @@show_actions
+    if @@show_actions && @@only_available_actions
+      create_available_actions_array
+      print "#{@@tab}Actions: #{@@available_actions.join(", ").capitalize + "."}\n"
+    elsif @@show_actions && !@@only_available_actions
+      print "#{@@tab}Actions: #{@@actions.join(", ") + "."}\n"
+    end
     puts "\n"
     print "#{@@tab}> "
 
     @user_action = $stdin.gets.chomp
+  end
+
+  # Creates the available actions array.
+  def create_available_actions_array
+    @@available_actions = []
+
+    if @forward_locked == false || @current_room == "room 7"
+      @@available_actions << @@actions[0]
+    end
+    if @left_locked == false || @current_room == "room 7"
+      @@available_actions << @@actions[1]
+    end
+    if @right_locked == false || @current_room == "room 7"
+      @@available_actions << @@actions[2]
+    end
+    if @back_locked == false
+      @@available_actions << @@actions[3]
+    end
   end
 
   # When the user introduces a wrong direction.
@@ -57,9 +81,17 @@ class Rooms
     map = Map.new
     current_room_index = map.cave_map.index(@current_room)
 
+    # Clears the screen and closes the game.
+    if @user_action.downcase == "exit"
+      clear_screen
+      puts "\nThanks for playing. Hope you enjoyed it!\n\n"
+      exit(1)
+    end
+
     # EAST
     if @@user_direction == "east"
       case @user_action.downcase
+
       # EAST - FORWARD  
       when "go forward"
         next_room_index = current_room_index + 1
@@ -69,9 +101,12 @@ class Rooms
 
           next_room = map.cave_map[next_room_index]
           map.rooms_list[next_room].enter
+        elsif @current_room == "room 7"
+          door_is_locked
         else
           cant_go_there
         end  
+
       # EAST - LEFT
       when "go left"
         left_room_index = current_room_index - 5
@@ -84,6 +119,7 @@ class Rooms
         else
           cant_go_there
         end
+
       # EAST - RIGHT
       when "go right"
         right_room_index = current_room_index + 5
@@ -96,6 +132,7 @@ class Rooms
         else
           cant_go_there
         end
+
       # EAST - BACK
       when "go back"
         previous_room_index = current_room_index - 1
@@ -108,6 +145,7 @@ class Rooms
         else
           cant_go_there
         end
+
       else
         not_an_action  
       end
@@ -115,6 +153,7 @@ class Rooms
     # SOUTH
     elsif @@user_direction == "south"    
       case @user_action.downcase
+
       # SOUTH - FORWARD
       when "go forward"
         next_room_index = current_room_index + 5
@@ -127,6 +166,7 @@ class Rooms
         else
           cant_go_there
         end  
+
       # SOUTH - LEFT
       when "go left"
         left_room_index = current_room_index + 1
@@ -141,6 +181,7 @@ class Rooms
         else
           cant_go_there
         end
+
       # SOUTH - RIGHT
       when "go right"  
         right_room_index = current_room_index - 1
@@ -153,6 +194,7 @@ class Rooms
         else
           cant_go_there
         end
+
       # SOUTH - BACK
       when "go back"
         previous_room_index = current_room_index - 5
@@ -165,6 +207,7 @@ class Rooms
         else
           cant_go_there
         end
+        
       else
         not_an_action
       end
@@ -172,6 +215,7 @@ class Rooms
     # NORTH
     elsif @@user_direction == "north"
       case @user_action.downcase
+
       # NORTH - FORWARD
       when "go forward"
         next_room_index = current_room_index - 5
@@ -184,6 +228,7 @@ class Rooms
         else
           cant_go_there
         end  
+
       # NORTH - LEFT
       when "go left"
         left_room_index = current_room_index - 1
@@ -196,6 +241,7 @@ class Rooms
         else
           cant_go_there
         end
+
       # NORTH - RIGHT
       when "go right"  
         right_room_index = current_room_index + 1
@@ -210,6 +256,7 @@ class Rooms
         else
           cant_go_there
         end
+
       # NORTH - BACK
       when "go back"
         previous_room_index = current_room_index + 5
@@ -222,6 +269,7 @@ class Rooms
         else
           cant_go_there
         end
+
       else
         not_an_action
       end
@@ -229,6 +277,7 @@ class Rooms
     # WEST
     elsif @@user_direction == "west"
       case @user_action.downcase
+
       # WEST - FORWARD
       when "go forward"
         next_room_index = current_room_index - 1
@@ -240,7 +289,8 @@ class Rooms
           map.rooms_list[next_room].enter
         else
           cant_go_there
-        end  
+        end 
+
       # WEST - LEFT
       when "go left"
         left_room_index = current_room_index + 5
@@ -253,6 +303,7 @@ class Rooms
         else
           cant_go_there
         end
+
       # WEST - RIGHT
       when "go right"
         right_room_index = current_room_index - 5
@@ -265,6 +316,7 @@ class Rooms
         else
           cant_go_there
         end
+
       # WEST - BACK
       when "go back"
         previous_room_index = current_room_index + 1
@@ -277,9 +329,11 @@ class Rooms
         else
           cant_go_there
         end
+
       else
         not_an_action
       end
+
     else
       puts "Something went wrong."
     end
@@ -412,8 +466,7 @@ class Room1 < Rooms
       puts "#{@@tab}The entrance to your front.\n\n"
     else
       puts "#{@@tab}You are in the main corridor."
-      puts "#{@@tab}The entrance to your left."
-      puts "#{@@tab}The glass wall to your right.\n\n"
+      puts "#{@@tab}The entrance to your left. The glass wall to your right.\n\n"
     end
   end
 end
