@@ -2,10 +2,8 @@ require './check-os.rb'
 
 class Rooms
   @@actions                = ["Go forward", "go left", "go right", "go back"]
-  @@show_actions           = true
-  @@only_available_actions = true
+  @@show_available_actions = true
   @@user_direction         = "east"
-
   # Spaces to separate the text from the left margin.
   @@tab                    = "      "
 
@@ -14,13 +12,11 @@ class Rooms
     system "clear" or system "cls"
   end
 
-  # Prints actions if @@show_actions is set to true, and gets user input.
+  # Prints actions if @@show_available_actions is set to true, and gets user input.
   def actions
-    if @@show_actions && @@only_available_actions
+    if @@show_available_actions
       create_available_actions_array
       print "#{@@tab}Actions: #{@@available_actions.join(", ").capitalize + "."}\n"
-    elsif @@show_actions
-      print "#{@@tab}Actions: #{@@actions.join(", ") + "."}\n"
     end
     puts "\n"
     print "#{@@tab}> "
@@ -342,7 +338,7 @@ class Rooms
   end
 
   # Uses unicode to show arrows for the user direction.
-  # Only works in Unix.
+  # Only works in Unix systems.
   def arrows
     extend OS
     
