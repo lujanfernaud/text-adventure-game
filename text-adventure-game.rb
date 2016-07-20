@@ -5,7 +5,6 @@
 require './map.rb'
 
 class Engine
-
   def initialize(game_map)
     @game_map = game_map
   end

@@ -1,7 +1,6 @@
 require './rooms.rb'
 
 class Map
-  
   attr_reader :cave_map, :rooms_list
 
   def initialize
