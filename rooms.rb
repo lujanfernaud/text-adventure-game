@@ -4,8 +4,7 @@ class Rooms
   @@actions                = ["Go forward", "go left", "go right", "go back"]
   @@show_available_actions = true
   @@user_direction         = "east"
-  # Spaces to separate the text from the left margin.
-  @@tab                    = "      "
+  @@tab                    = "      " # Separate the text from the left margin.
 
   # Clears the console in Unix and Windows systems.
   def clear_screen
@@ -24,20 +23,20 @@ class Rooms
     @user_action = $stdin.gets.chomp
   end
 
-  # Creates the available actions array.
+  # Checks for not locked directions and creates the @@available_actions array.
   def create_available_actions_array
     @@available_actions = []
 
-    if @forward_locked == false || @current_room == "room 7"
+    if !@forward_locked || @current_room == "room 7"
       @@available_actions << @@actions[0]
     end
-    if @left_locked == false || @current_room == "room 7"
+    if !@left_locked || @current_room == "room 7"
       @@available_actions << @@actions[1]
     end
-    if @right_locked == false || @current_room == "room 7"
+    if !@right_locked || @current_room == "room 7"
       @@available_actions << @@actions[2]
     end
-    if @back_locked == false
+    if !@back_locked
       @@available_actions << @@actions[3]
     end
   end
@@ -79,7 +78,7 @@ class Rooms
   def check_user_action
     if @user_action.downcase == "exit"
       clear_screen
-      puts "\nThanks for playing. Hope you enjoyed it!\n\n"
+      puts "\nThanks for playing. Hope you liked it!\n\n"
       exit(1)
     end
 
@@ -210,6 +209,66 @@ class Rooms
         not_an_action
       end
 
+    # WEST
+    elsif @@user_direction == "west"
+      case @user_action.downcase
+
+      # WEST - FORWARD
+      when "go forward"
+        next_room_index = current_room_index - 1
+
+        if !@forward_locked
+          @@user_direction = "west"
+
+          next_room = map.cave_map[next_room_index]
+          map.rooms_list[next_room].enter
+        else
+          cant_go_there
+        end 
+
+      # WEST - LEFT
+      when "go left"
+        left_room_index = current_room_index + 5
+
+        if !@left_locked
+          @@user_direction = "south"
+
+          left_room = map.cave_map[left_room_index]
+          map.rooms_list[left_room].enter
+        else
+          cant_go_there
+        end
+
+      # WEST - RIGHT
+      when "go right"
+        right_room_index = current_room_index - 5
+
+        if !@right_locked
+          @@user_direction = "north"
+
+          right_room = map.cave_map[right_room_index]
+          map.rooms_list[right_room].enter        
+        else
+          cant_go_there
+        end
+
+      # WEST - BACK
+      when "go back"
+        previous_room_index = current_room_index + 1
+
+        if !@back_locked
+          @@user_direction = "east"
+
+          previous_room = map.cave_map[previous_room_index]
+          map.rooms_list[previous_room].enter
+        else
+          cant_go_there
+        end
+
+      else
+        not_an_action
+      end
+
     # NORTH
     elsif @@user_direction == "north"
       case @user_action.downcase
@@ -261,66 +320,6 @@ class Rooms
 
         if !@back_locked
           @@user_direction = "south"
-
-          previous_room = map.cave_map[previous_room_index]
-          map.rooms_list[previous_room].enter
-        else
-          cant_go_there
-        end
-
-      else
-        not_an_action
-      end
-
-    # WEST
-    elsif @@user_direction == "west"
-      case @user_action.downcase
-
-      # WEST - FORWARD
-      when "go forward"
-        next_room_index = current_room_index - 1
-
-        if !@forward_locked
-          @@user_direction = "west"
-
-          next_room = map.cave_map[next_room_index]
-          map.rooms_list[next_room].enter
-        else
-          cant_go_there
-        end 
-
-      # WEST - LEFT
-      when "go left"
-        left_room_index = current_room_index + 5
-
-        if !@left_locked
-          @@user_direction = "south"
-
-          left_room = map.cave_map[left_room_index]
-          map.rooms_list[left_room].enter
-        else
-          cant_go_there
-        end
-
-      # WEST - RIGHT
-      when "go right"
-        right_room_index = current_room_index - 5
-
-        if !@right_locked
-          @@user_direction = "north"
-
-          right_room = map.cave_map[right_room_index]
-          map.rooms_list[right_room].enter        
-        else
-          cant_go_there
-        end
-
-      # WEST - BACK
-      when "go back"
-        previous_room_index = current_room_index + 1
-
-        if !@back_locked
-          @@user_direction = "east"
 
           previous_room = map.cave_map[previous_room_index]
           map.rooms_list[previous_room].enter
@@ -480,7 +479,7 @@ class Room2 < Rooms
     clear_screen  
     locked_directions
 
-	  show_room_information
+    show_room_information
     actions
     check_user_action
   end
@@ -529,7 +528,7 @@ class Room2 < Rooms
 end
 
 class Room3 < Rooms
-	def enter
+  def enter
     @current_room = "room 3"
     clear_screen
     locked_directions
@@ -649,7 +648,7 @@ class Locked < Rooms
     clear_screen
     locked_directions
 
-	  show_room_information
+    show_room_information
     actions
     check_user_action
   end
@@ -1025,7 +1024,7 @@ class Exit < Rooms
     clear_screen
     locked_directions
 
-	  show_room_information
+    show_room_information
     actions
     check_user_action
   end
@@ -1060,7 +1059,9 @@ class Exit < Rooms
       ##############################################
     \n\n"
 
-    puts "#{@@tab}An empty room."
+    puts "#{@@tab}Another empty room."
     puts "#{@@tab}Not much to see here.\n\n"
+
+    puts "#{@@tab}You can type 'exit' to close the game.\n\n"
   end
 end
