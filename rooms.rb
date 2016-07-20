@@ -1,10 +1,11 @@
 class Rooms
-
-  @@actions = ["Go forward", "go left", "go right", "go back"]
-  @@show_actions = true
+  @@actions                = ["Go forward", "go left", "go right", "go back"]
+  @@show_actions           = true
   @@only_available_actions = true
-  @@user_direction = "east"
-  @@tab = "      " # Add spaces to separate the text from the left margin.
+  @@user_direction         = "east"
+
+  # Spaces to separate the text from the left margin.
+  @@tab                    = "      "
 
   # Clears the console in Unix and Windows systems.
   def clear_screen
@@ -16,7 +17,7 @@ class Rooms
     if @@show_actions && @@only_available_actions
       create_available_actions_array
       print "#{@@tab}Actions: #{@@available_actions.join(", ").capitalize + "."}\n"
-    elsif @@show_actions && !@@only_available_actions
+    elsif @@show_actions
       print "#{@@tab}Actions: #{@@actions.join(", ") + "."}\n"
     end
     puts "\n"
@@ -78,15 +79,14 @@ class Rooms
   # and that direction is not locked, it updates the
   # @@user_direction variable, and enters the appropriate room.
   def check_user_action
-    map = Map.new
-    current_room_index = map.cave_map.index(@current_room)
-
-    # Clears the screen and closes the game.
     if @user_action.downcase == "exit"
       clear_screen
       puts "\nThanks for playing. Hope you enjoyed it!\n\n"
       exit(1)
     end
+
+    map = Map.new
+    current_room_index = map.cave_map.index(@current_room)
 
     # EAST
     if @@user_direction == "east"
@@ -351,10 +351,9 @@ class Rooms
 end
 
 class Entrance < Rooms
-
   def enter
-	  clear_screen
     @current_room = "entrance"
+	  clear_screen
     locked_directions
 
     show_room_information
@@ -408,10 +407,9 @@ class Entrance < Rooms
 end
 
 class Room1 < Rooms
-
   def enter
-    clear_screen
     @current_room = "room 1"
+    clear_screen
     locked_directions
 
     show_room_information
@@ -429,13 +427,13 @@ class Room1 < Rooms
     when "west"
       @left_locked    = false
       @right_locked   = true
-      @forward_locked = false
       @back_locked    = false
+      @forward_locked = false
     when "north"
       @left_locked    = false
       @right_locked   = false
-      @forward_locked = true
       @back_locked    = false
+      @forward_locked = true
     end
   end
 
@@ -472,10 +470,9 @@ class Room1 < Rooms
 end
 
 class Room2 < Rooms
-
   def enter
-    clear_screen  
     @current_room = "room 2"
+    clear_screen  
     locked_directions
 
 	  show_room_information
@@ -527,10 +524,9 @@ class Room2 < Rooms
 end
 
 class Room3 < Rooms
-
 	def enter
-    clear_screen
     @current_room = "room 3"
+    clear_screen
     locked_directions
 
     show_room_information
@@ -548,13 +544,13 @@ class Room3 < Rooms
     when "west"
       @left_locked    = false
       @right_locked   = true
-      @forward_locked = false
       @back_locked    = false
+      @forward_locked = false
     when "north"
       @left_locked    = false
       @right_locked   = false
-      @forward_locked = true
       @back_locked    = false
+      @forward_locked = true
     end
   end
 
@@ -586,8 +582,7 @@ class Room3 < Rooms
       puts "#{@@tab}The entrance to your front.\n\n"
     elsif @@user_direction == "north"
       puts "#{@@tab}You are in the main corridor."
-      puts "#{@@tab}The entrance to your left."
-      puts "#{@@tab}The glass wall to your right.\n\n"
+      puts "#{@@tab}The entrance to your left. The glass wall to your right.\n\n"
     else
       puts "#{@@tab}You are in the main corridor."
       puts "#{@@tab}You can see the entrance at the end.\n\n"
@@ -596,10 +591,9 @@ class Room3 < Rooms
 end
 
 class Room4 < Rooms
-
   def enter
-    clear_screen
     @current_room = "room 4"
+    clear_screen
     locked_directions
 
     show_room_information
@@ -623,9 +617,9 @@ class Room4 < Rooms
 
     puts "
       ##############################################
-      #                                            |
-      |                                        #{arrows}   |
-      #                                            |
+      #                                            |      @@@
+      |                                        #{arrows}   |     @@o@@
+      #                                            |      @@@
       ##########     ################     ##########
       #        #     #              #     #        #
       #        #     #              #     #        #
@@ -645,10 +639,9 @@ end
 
 # Initially, this room was supposed to be locked.
 class Locked < Rooms
-
   def enter
-    clear_screen
     @current_room = "locked"
+    clear_screen
     locked_directions
 
 	  show_room_information
@@ -692,10 +685,9 @@ class Locked < Rooms
 end
 
 class Room5 < Rooms
-
   def enter
-    clear_screen
     @current_room = "room 5"
+    clear_screen
     locked_directions
 
     show_room_information
@@ -757,10 +749,9 @@ class Room5 < Rooms
 end
 
 class Room6 < Rooms
-
   def enter
-    clear_screen
     @current_room = "room 6"
+    clear_screen
     locked_directions
 
     show_room_information
@@ -804,10 +795,9 @@ class Room6 < Rooms
 end
 
 class Room7 < Rooms
-
   def enter
-    clear_screen
     @current_room = "room 7"
+    clear_screen
     locked_directions
     
     show_room_information
@@ -869,10 +859,9 @@ class Room7 < Rooms
 end
 
 class Room8 < Rooms
-
   def enter
-    clear_screen
     @current_room = "room 8"
+    clear_screen
     locked_directions
     
     show_room_information
@@ -916,10 +905,9 @@ class Room8 < Rooms
 end
 
 class Room9 < Rooms
-
   def enter
-    clear_screen
     @current_room = "room 9"
+    clear_screen
     locked_directions
     
     show_room_information
@@ -972,10 +960,9 @@ class Room9 < Rooms
 end
 
 class Room10 < Rooms
-
   def enter
-    clear_screen
     @current_room = "room 10"
+    clear_screen
     locked_directions
     
     show_room_information
@@ -1028,10 +1015,9 @@ class Room10 < Rooms
 end
 
 class Exit < Rooms
-
   def enter
-    clear_screen
     @current_room = "exit"
+    clear_screen
     locked_directions
 
 	  show_room_information
