@@ -1,3 +1,5 @@
+require './check-os.rb'
+
 class Rooms
   @@actions                = ["Go forward", "go left", "go right", "go back"]
   @@show_actions           = true
@@ -340,12 +342,19 @@ class Rooms
   end
 
   # Uses unicode to show arrows for the user direction.
+  # Only works in Unix.
   def arrows
-    case @@user_direction
-    when "east"  then "\u21c9"
-    when "west"  then "\u21c7"
-    when "north" then "\u21c8"
-    when "south" then "\u21ca"
+    extend OS
+    
+    if OS.unix?
+      case @@user_direction
+      when "east"  then "\u21c9"
+      when "west"  then "\u21c7"
+      when "north" then "\u21c8"
+      when "south" then "\u21ca"
+      end
+    else
+      "x"
     end
   end
 end
@@ -353,7 +362,7 @@ end
 class Entrance < Rooms
   def enter
     @current_room = "entrance"
-	  clear_screen
+    clear_screen
     locked_directions
 
     show_room_information
